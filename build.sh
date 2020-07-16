@@ -1,2 +1,5 @@
 #!/bin/sh
-exit 0
+
+mkdir build
+cd build
+cmake ..
