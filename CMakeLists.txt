@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.12)
 
 project(icfpc2020 VERSION 0.1.0 LANGUAGES CXX)
 
