@@ -1,5 +1,5 @@
 #!/bin/sh
 
-cd build
+cd build/src
 ./icfpc2020 "$@" || echo "run error code: $?"
 
