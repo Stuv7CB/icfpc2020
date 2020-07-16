@@ -14,10 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@2.1.1
-    - name: get-cmake
+      uses: srt32/git-actions@v0.0.3
+      with:
+        args: git submodule update --init --recursive
+    - name: Install CMake 3.17.3
       uses: lukka/get-cmake@v3.17.3
-    - name: run-cmake
+    - name: Run CMake
       uses: lukka/run-cmake@v2.5
       with:
         cmakeListsOrSettingsJson: CMakeListsTxtBasic
