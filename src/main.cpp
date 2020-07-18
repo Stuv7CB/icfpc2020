@@ -27,15 +27,6 @@ void printResponse(std::vector<std::any> resp)
 
 int main(int argc, char* argv[])
 {
-    std::vector<std::any> testData = {std::any(static_cast<int64_t>(1)),
-                                      std::any(std::vector<std::any>({std::any(std::vector<std::any>({static_cast<int64_t>(0), static_cast<int64_t>(8450062863238389037)})),
-                                                                      std::any(std::vector<std::any>({static_cast<int64_t>(1), static_cast<int64_t>(6382104060584514366)}))})
-                                              )};
-    std::cout << Modulation::modulateList(testData) << std::endl;
-    std::string_view test = "110110000111011111100001001110101100111000";
-    printResponse(Modulation::demodulateList(test));
-    std::cout << std::endl;
-
     std::shared_ptr<httplib::Response> serverResponse;
     if (argc != 3)
     {
