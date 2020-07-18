@@ -64,6 +64,7 @@ std::vector<std::any> Modulation::demodulateList(std::string_view &signal)
         if (signal.substr(0, 2) == "11")
         {
             result.emplace_back(demodulateList(signal));
+            continue;
         }
         result.push_back(demodulate(signal));
 

@@ -17,7 +17,10 @@ void printResponse(std::vector<std::any> resp)
         {
             printResponse(std::any_cast<std::vector<std::any>>(el));
         }
-        std::cout << ", ";
+        if (&el != &resp.back())
+        {
+            std::cout << ", ";
+        }
     }
     std::cout << ')';
 }
@@ -76,6 +79,13 @@ int main(int argc, char* argv[])
         std::cout << "Server response: " << serverResponse->body << std::endl;
         serverResponse =  client.Post("/aliens/send?apiKey=42d71c651c4a4048842b8973c8bb3608",
                                       serverResponse->body, "text/plain");
+        errorCheck(serverResponse);
+        test = serverResponse->body;
+        printResponse(Modulation::demodulateList(test));
+        std::cout << std::endl;
+        std::cout << "Server response: " << serverResponse->body << std::endl;
+
+        serverResponse =  client.Post("/aliens/send?apiKey=42d71c651c4a4048842b8973c8bb3608", "11011000011101000", "text/plain");
         errorCheck(serverResponse);
         test = serverResponse->body;
         printResponse(Modulation::demodulateList(test));
