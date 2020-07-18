@@ -77,7 +77,10 @@ std::vector<std::any> Modulation::demodulateList(std::string_view &signal)
     return result;
 }
 
-std::string Modulation::modulateList(std::vector<std::any>)
+
+
+std::string Modulation::modulateList(std::vector<std::any> &list)
 {
+
     throw std::runtime_error("Not implemented");
 }
