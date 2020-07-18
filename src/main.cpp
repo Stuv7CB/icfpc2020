@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     const std::string serverUrl(argv[1]);
     const std::string playerKeyString(argv[2]);
 
-    uint64_t playerKey;
+    int64_t playerKey;
 
     std::stringstream strStr(playerKeyString);
 
