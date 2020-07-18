@@ -97,10 +97,7 @@ std::string Modulation::modulate(int64_t value)
     }
     signed char size = (std::log2(value) / 4.0);
     size += 1;
-    for (signed char i = 0; i < size; ++i)
-    {
-        result += '1';
-    }
+    result.append(size, '1');
     result += '0';
     size *= 4;
     --size;
