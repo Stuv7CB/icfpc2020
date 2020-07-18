@@ -127,9 +127,9 @@ std::string Modulation::modulate(int64_t value)
 std::string Modulation::modulateList(const List &list)
 {
     std::string result;
+    result += "11";
     for (auto &el : list.value)
     {
-        result += "11";
         result += std::visit([](auto&& arg) -> std::string
         {
             using T = std::decay_t<decltype(arg)>;
@@ -165,7 +165,7 @@ void printResponseArray(const Modulation::List& resp)
             }
             else if constexpr (std::is_same_v<T, Modulation::List>)
             {
-                printResponse(arg);
+                printResponseArray(arg);
             }
             else
             {
@@ -183,5 +183,5 @@ void printResponseArray(const Modulation::List& resp)
 void Modulation::printResponse(const Modulation::List& resp)
 {
     printResponseArray(resp);
-    std::cout << std::endl;
+    std::cout << "" << std::endl;
 }
