@@ -2,12 +2,29 @@
 #include <string_view>
 #include <any>
 #include <vector>
+#include <variant>
 
-class Modulation
+namespace Modulation
 {
-public:
-    static int64_t demodulate(std::string_view &signal);
-    static std::vector<std::any> demodulateList(std::string_view &signal);
-    static std::string modulate(int64_t value);
-    static std::string modulateList(const std::vector<std::any> &list);
+
+struct List
+{
+    List()
+    {
+
+    }
+
+    List(std::vector<std::variant<int64_t, List>> &&v) : value(std::move(v))
+    {
+
+    }
+
+    std::vector<std::variant<int64_t, List>> value;
+};
+
+int64_t demodulate(std::string_view &signal);
+List demodulateList(std::string_view &signal);
+std::string modulate(int64_t value);
+std::string modulateList(const List &list);
+
 };

@@ -2,23 +2,33 @@
 #include <cstdint>
 #include <iostream>
 #include <sstream>
+#include <type_traits>
 #include "Modulation.hpp"
 #include "Transceiver.hpp"
+#include "helper.hpp"
 
-void printResponse(std::vector<std::any> resp)
+void printResponse(const Modulation::List& resp)
 {
     std::cout << '(';
-    for (auto &el : resp)
+    for (auto &el : resp.value)
     {
-        if (typeid(int64_t) == el.type())
+        std::visit([](auto&& arg)
         {
-            std::cout << std::any_cast<int64_t>(el);
-        }
-        if (typeid(std::vector<std::any>) == el.type())
-        {
-            printResponse(std::any_cast<std::vector<std::any>>(el));
-        }
-        if (&el != &resp.back())
+            using T = std::decay_t<decltype(arg)>;
+            if constexpr (std::is_same_v<T, int64_t>)
+            {
+                std::cout << arg;
+            }
+            else if constexpr (std::is_same_v<T, Modulation::List>)
+            {
+                printResponse(arg);
+            }
+            else
+            {
+                static_assert(always_false_v<T>, "non-exhaustive visitor!");
+            }
+        }, el);
+        if (&el != &resp.value.back())
         {
             std::cout << ", ";
         }
@@ -28,7 +38,6 @@ void printResponse(std::vector<std::any> resp)
 
 int main(int argc, char* argv[])
 {
-    std::shared_ptr<httplib::Response> serverResponse;
     if (argc != 3)
     {
         return 1;
@@ -47,11 +56,12 @@ int main(int argc, char* argv[])
 
     Transceiver transeiver(serverUrl);
 
-    std::vector<std::any> joinRequest =
+    Modulation::List joinRequest;
+    joinRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
     {
-        std::any(2),
-        std::any(playerKey),
-        std::any(std::vector<std::any>())
+        std::variant<int64_t, Modulation::List>(2),
+        std::variant<int64_t, Modulation::List>(playerKey),
+        std::variant<int64_t, Modulation::List>(Modulation::List()),
     };
 
     std::cout << "Join Request" << std::endl;
@@ -64,11 +74,18 @@ int main(int argc, char* argv[])
     std::cout << "Join Response" << std::endl;
     printResponse(joinResponse);
 
-    std::vector<std::any> startRequest =
+    Modulation::List startRequest;
+    startRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
     {
-        std::any(3),
-        std::any(playerKey),
-        std::any(std::vector<std::any>(4, std::any(0)))
+        std::variant<int64_t, Modulation::List>(3),
+        std::variant<int64_t, Modulation::List>(playerKey),
+        std::variant<int64_t, Modulation::List>(
+                    Modulation::List(
+                        std::vector<std::variant<int64_t, Modulation::List>>
+                        {
+                            std::variant<int64_t, Modulation::List>(4),
+                            std::variant<int64_t, Modulation::List>(Modulation::List()),
+                        }))
     };
 
     std::cout << "Start Request" << std::endl;
@@ -82,10 +99,11 @@ int main(int argc, char* argv[])
     std::cout << "Start Response" << std::endl;
     printResponse(startResponse);
 
-    auto gameState = std::any_cast<int64_t>(startResponse[1]);
+    auto gameState = std::get<int64_t>(startResponse.value[1]);
 
     while (gameState != 2)
     {
+        break;
     }
 
     return 0;

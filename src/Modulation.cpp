@@ -1,4 +1,5 @@
 #include "Modulation.hpp"
+#include "helper.hpp"
 #include <stdexcept>
 #include <cstdint>
 #include <cmath>
@@ -55,19 +56,19 @@ int64_t Modulation::demodulate(std::string_view &signal)
     }
 }
 
-std::vector<std::any> Modulation::demodulateList(std::string_view &signal)
+Modulation::List Modulation::demodulateList(std::string_view &signal)
 {
-    std::vector<std::any> result;
+    Modulation::List list;
 
     while (!signal.empty() && signal.substr(0, 2) == "11")
     {
         signal = signal.substr(2);
         if (signal.substr(0, 2) == "11")
         {
-            result.emplace_back(demodulateList(signal));
+            list.value.emplace_back(demodulateList(signal));
             continue;
         }
-        result.push_back(demodulate(signal));
+        list.value.push_back(demodulate(signal));
 
         if (signal.substr(0, 2) == "00")
         {
@@ -75,7 +76,7 @@ std::vector<std::any> Modulation::demodulateList(std::string_view &signal)
             break;
         }
     }
-    return result;
+    return list;
 }
 
 std::string Modulation::modulate(int64_t value)
@@ -115,20 +116,28 @@ std::string Modulation::modulate(int64_t value)
     return result;
 }
 
-std::string Modulation::modulateList(const std::vector<std::any> &list)
+std::string Modulation::modulateList(const List &list)
 {
     std::string result;
-    for (auto &el : list)
+    for (auto &el : list.value)
     {
         result += "11";
-        if (typeid(int64_t) == el.type())
+        result += std::visit([](auto&& arg) -> std::string
         {
-            result += modulate(std::any_cast<int64_t>(el));
-        }
-        if (typeid(std::vector<std::any>) == el.type())
-        {
-            result += modulateList(std::any_cast<std::vector<std::any>>(el));
-        }
+            using T = std::decay_t<decltype(arg)>;
+            if constexpr (std::is_same_v<T, int64_t>)
+            {
+                return modulate(arg);
+            }
+            else if constexpr (std::is_same_v<T, Modulation::List>)
+            {
+                return modulateList(arg);
+            }
+            else
+            {
+                static_assert(always_false_v<T>, "non-exhaustive visitor!");
+            }
+        }, el);
     }
     result += "00";
     return result;
