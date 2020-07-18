@@ -37,8 +37,9 @@ int main(int argc, char* argv[])
 
     std::cout << "Join Request" << std::endl;
     printResponse(joinRequest);
-
-    auto joinResponseString = transeiver.send(Modulation::modulateList(joinRequest));
+    auto joinRequestString = Modulation::modulateList(joinRequest);
+    std::cout << joinRequestString << std::endl;
+    auto joinResponseString = transeiver.send(joinRequestString);
     auto joinResponseStringView = std::string_view(joinResponseString);
 
     auto joinResponse = Modulation::demodulateList(joinResponseStringView);
@@ -64,7 +65,10 @@ int main(int argc, char* argv[])
     std::cout << "Start Request" << std::endl;
     printResponse(startRequest);
 
-    auto startResponseString = transeiver.send(Modulation::modulateList(startRequest));
+    auto startRequestString = Modulation::modulateList(startRequest);
+    std::cout << startRequestString << std::endl;
+
+    auto startResponseString = transeiver.send(startRequestString);
     auto startResponseStringView = std::string_view(startResponseString);
 
     auto startResponse = Modulation::demodulateList(startResponseStringView);
