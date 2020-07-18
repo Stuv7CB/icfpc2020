@@ -61,7 +61,12 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
 {
     Modulation::List list;
 
-    if (signal.substr(0,2) != "11")
+    if (signal.substr(0,2) == "00")
+    {
+        signal = signal.substr(2);
+        return list;
+    }
+    else if (signal.substr(0,2) != "11")
     {
         throw std::runtime_error("Not a list");
     }
@@ -79,10 +84,22 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
         {
             signal = signal.substr(2);
             list.value.emplace_back(List());
-            continue;
         }
-
-        list.value.push_back(demodulate(signal));
+        else
+        {
+            list.value.push_back(demodulate(signal));
+            auto ss = signal.substr(0, 2);
+            if (ss == "10" || ss == "01")
+            {
+                list.value.push_back(demodulate(signal));
+                break;
+            }
+        }
+        if (signal.substr(0, 2) == "00")
+        {
+            signal = signal.substr(2);
+            break;
+        }
     }
     return list;
 }
