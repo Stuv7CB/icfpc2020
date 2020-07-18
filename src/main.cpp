@@ -28,10 +28,6 @@ void printResponse(std::vector<std::any> resp)
 
 int main(int argc, char* argv[])
 {
-    std::string_view test = "110110000111011111100001001110101100111000";
-    printResponse(Modulation::demodulateList(test));
-    std::cout << std::endl;
-
     std::shared_ptr<httplib::Response> serverResponse;
     if (argc != 3)
     {
