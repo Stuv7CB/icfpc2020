@@ -68,13 +68,14 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
             list.value.emplace_back(demodulateList(signal));
             continue;
         }
-        list.value.push_back(demodulate(signal));
 
         if (signal.substr(0, 2) == "00")
         {
             signal = signal.substr(2);
             break;
         }
+
+        list.value.push_back(demodulate(signal));
     }
     return list;
 }
