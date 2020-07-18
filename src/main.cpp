@@ -1,41 +1,62 @@
-#include <iostream>
-#include <regex>
 #include <string>
-#include <httplib.h>
+#include "Modulation.hpp"
+#include "Transceiver.hpp"
 
-int main(int, char* argv[])
+void printResponse(std::vector<std::any> resp)
 {
-    const std::string serverUrl(argv[1]);
-    const std::string playerKey(argv[2]);
-
-    std::cout << "ServerUrl: " << serverUrl << "; PlayerKey: " << playerKey << std::endl;
-
-    const std::regex urlRegexp("http://(.+):(\\d+)");
-    std::smatch urlMatches;
-    if (!std::regex_search(serverUrl, urlMatches, urlRegexp) || urlMatches.size() != 3)
+    std::cout << '(';
+    for (auto &el : resp)
     {
-        std::cout << "Unexpected server response:\nBad server URL" << std::endl;
-        return 1;
+        if (typeid(BigInt) == el.type())
+        {
+            std::cout << std::any_cast<BigInt>(el);
+        }
+        if (typeid(std::vector<std::any>) == el.type())
+        {
+            printResponse(std::any_cast<std::vector<std::any>>(el));
+        }
+        if (&el != &resp.back())
+        {
+            std::cout << ", ";
+        }
     }
-    const std::string serverName = urlMatches[1];
-    const int serverPort = std::stoi(urlMatches[2]);
-    httplib::Client client(serverName, serverPort);
-    const std::shared_ptr<httplib::Response> serverResponse =
-        client.Post(serverUrl.c_str(), playerKey.c_str(), "text/plain");
+    std::cout << ')';
+}
 
-    if (!serverResponse)
+int main(int argc, char* argv[])
+{
+    std::string_view test = "110110000111011111100001001110101100111000";
+    printResponse(Modulation::demodulateList(test));
+    std::cout << std::endl;
+
+    std::shared_ptr<httplib::Response> serverResponse;
+    if (argc == 3)
     {
-        std::cout << "Unexpected server response:\nNo response from server" << std::endl;
-        return 1;
-    }
+        const std::string serverUrl(argv[1]);
+        const std::string playerKey(argv[2]);
 
-    if (serverResponse->status != 200)
+        std::cout << "ServerUrl: " << serverUrl << "; PlayerKey: " << playerKey << std::endl;
+
+        Transceiver(serverUrl, playerKey);
+    }
+    else
     {
-        std::cout << "Unexpected server response:\nHTTP code: " << serverResponse->status
-                  << "\nResponse body: " << serverResponse->body << std::endl;
-        return 2;
+        Transceiver transceiver;
+        auto response = transceiver.send("0");
+        test = response;
+        printResponse(Modulation::demodulateList(test));
+        std::cout << std::endl;
+
+        response = transceiver.send(response);
+        test = response;
+        printResponse(Modulation::demodulateList(test));
+        std::cout << std::endl;
+
+        response = transceiver.send("11011000011101000");
+        test = response;
+        printResponse(Modulation::demodulateList(test));
+        std::cout << std::endl;
     }
 
-    std::cout << "Server response: " << serverResponse->body << std::endl;
     return 0;
 }
