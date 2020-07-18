@@ -63,7 +63,7 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
 
     if (signal.substr(0,2) != "11")
     {
-        throw std::exception("Not a list");
+        throw std::runtime_error("Not a list");
     }
 
     signal = signal.substr(2);
