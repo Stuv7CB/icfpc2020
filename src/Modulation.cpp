@@ -1,6 +1,7 @@
 #include "Modulation.hpp"
 #include <stdexcept>
 #include <cstdint>
+#include <cmath>
 
 int64_t Modulation::demodulate(std::string_view &signal)
 {
@@ -26,7 +27,7 @@ int64_t Modulation::demodulate(std::string_view &signal)
         {
             if (signal[i] == '1')
             {
-                result += 1 << (count - i - 1);;
+                result += static_cast<int64_t>(1) << (count - i - 1);
             }
         }
         signal = signal.substr(count);
@@ -77,10 +78,61 @@ std::vector<std::any> Modulation::demodulateList(std::string_view &signal)
     return result;
 }
 
-
-
-std::string Modulation::modulateList(std::vector<std::any> &list)
+std::string Modulation::modulate(int64_t value)
 {
+    std::string result;
+    if (value >= 0)
+    {
+        result += "01";
+        if (value == 0)
+        {
+            result += '0';
+            return result;
+        }
+    }
+    else
+    {
+        result += "10";
+        value *= -1;
+    }
+    signed char size = (std::log2(value) / 4.0);
+    size += 1;
+    for (signed char i = 0; i < size; ++i)
+    {
+        result += '1';
+    }
+    result += '0';
+    size *= 4;
+    --size;
+    for (; size >= 0; --size)
+    {
+        if ((value >> size) & 1)
+        {
+            result += '1';
+        }
+        else
+        {
+            result += '0';
+        }
+    }
+    return result;
+}
 
-    throw std::runtime_error("Not implemented");
+std::string Modulation::modulateList(const std::vector<std::any> &list)
+{
+    std::string result;
+    for (auto &el : list)
+    {
+        result += "11";
+        if (typeid(int64_t) == el.type())
+        {
+            result += modulate(std::any_cast<int64_t>(el));
+        }
+        if (typeid(std::vector<std::any>) == el.type())
+        {
+            result += modulateList(std::any_cast<std::vector<std::any>>(el));
+        }
+    }
+    result += "00";
+    return result;
 }
