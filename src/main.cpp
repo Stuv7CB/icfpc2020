@@ -1,4 +1,6 @@
 #include <string>
+#include <cstdint>
+#include <iostream>
 #include "Modulation.hpp"
 #include "Transceiver.hpp"
 
@@ -7,9 +9,9 @@ void printResponse(std::vector<std::any> resp)
     std::cout << '(';
     for (auto &el : resp)
     {
-        if (typeid(BigInt) == el.type())
+        if (typeid(int64_t) == el.type())
         {
-            std::cout << std::any_cast<BigInt>(el);
+            std::cout << std::any_cast<int64_t>(el);
         }
         if (typeid(std::vector<std::any>) == el.type())
         {
@@ -39,24 +41,5 @@ int main(int argc, char* argv[])
 
         Transceiver(serverUrl, playerKey);
     }
-    else
-    {
-        Transceiver transceiver;
-        auto response = transceiver.send("0");
-        test = response;
-        printResponse(Modulation::demodulateList(test));
-        std::cout << std::endl;
-
-        response = transceiver.send(response);
-        test = response;
-        printResponse(Modulation::demodulateList(test));
-        std::cout << std::endl;
-
-        response = transceiver.send("11011000011101000");
-        test = response;
-        printResponse(Modulation::demodulateList(test));
-        std::cout << std::endl;
-    }
-
     return 0;
 }

@@ -2,9 +2,9 @@
 #include <stdexcept>
 #include <cstdint>
 
-BigInt Modulation::demodulate(std::string_view &signal)
+int64_t Modulation::demodulate(std::string_view &signal)
 {
-    BigInt result = 0;
+    int64_t result = 0;
     auto getValue = [&result, &signal]()
     {
         uint64_t count = 0;
@@ -26,7 +26,7 @@ BigInt Modulation::demodulate(std::string_view &signal)
         {
             if (signal[i] == '1')
             {
-                result += pow(2LL, count - i - 1);
+                result += 1 << (count - i - 1);;
             }
         }
         signal = signal.substr(count);

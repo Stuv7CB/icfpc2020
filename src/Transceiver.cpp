@@ -1,10 +1,6 @@
 #include "Transceiver.hpp"
 #include <regex>
-
-Transceiver::Transceiver()
-{
-    _client = std::make_unique<httplib::SSLClient>("icfpc2020-api.testkontur.ru");
-}
+#include <iostream>
 
 Transceiver::Transceiver(const std::string &serverPath, const std::string &playerKey)
     : _serverPath(serverPath), _playerKey(playerKey)

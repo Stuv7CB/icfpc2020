@@ -5,7 +5,6 @@
 class Transceiver
 {
 public:
-    Transceiver();
     Transceiver(const std::string &serverPath, const std::string &playerKey);
 
     std::string send(std::string_view data);
