@@ -32,14 +32,17 @@ int main(int argc, char* argv[])
     std::cout << std::endl;
 
     std::shared_ptr<httplib::Response> serverResponse;
-    if (argc == 3)
+    if (argc != 3)
     {
-        const std::string serverUrl(argv[1]);
-        const std::string playerKey(argv[2]);
-
-        std::cout << "ServerUrl: " << serverUrl << "; PlayerKey: " << playerKey << std::endl;
-
-        Transceiver(serverUrl, playerKey);
+        return 1;
     }
+
+    const std::string serverUrl(argv[1]);
+    const std::string playerKey(argv[2]);
+
+    std::cout << "ServerUrl: " << serverUrl << "; PlayerKey: " << playerKey << std::endl;
+
+    Transceiver transeiver(serverUrl);
+
     return 0;
 }

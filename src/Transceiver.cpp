@@ -2,10 +2,8 @@
 #include <regex>
 #include <iostream>
 
-Transceiver::Transceiver(const std::string &serverUrl, const std::string &playerKey)
-    : _playerKey(playerKey)
+Transceiver::Transceiver(const std::string &serverUrl)
 {
-    _serverPath = "/aliens/send";
     const std::regex urlRegexp("http://(.+):(\\d+)");
     std::smatch urlMatches;
     if (!std::regex_search(serverUrl, urlMatches, urlRegexp) || urlMatches.size() != 3)
@@ -16,8 +14,6 @@ Transceiver::Transceiver(const std::string &serverUrl, const std::string &player
     const int serverPort = std::stoi(urlMatches[2]);
 
     _client = std::make_unique<httplib::Client>(serverName, serverPort);
-    auto serverResponse = _client->Post(_serverPath.c_str(), playerKey.c_str(), "text/plain");
-    _errorCheck(serverResponse);
 }
 
 std::string Transceiver::send(std::string_view data)
