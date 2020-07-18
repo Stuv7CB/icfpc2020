@@ -8,5 +8,6 @@ class Modulation
 public:
     static int64_t demodulate(std::string_view &signal);
     static std::vector<std::any> demodulateList(std::string_view &signal);
-    static std::string modulateList(std::vector<std::any>);
+    static std::string modulate(int64_t value);
+    static std::string modulateList(std::vector<std::any> &list);
 };
