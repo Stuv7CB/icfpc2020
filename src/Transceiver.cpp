@@ -1,17 +1,14 @@
 #include "Transceiver.hpp"
 #include <regex>
+#include <iostream>
 
-Transceiver::Transceiver()
+Transceiver::Transceiver(const std::string &serverUrl, const std::string &playerKey)
+    : _playerKey(playerKey)
 {
-    _client = std::make_unique<httplib::SSLClient>("icfpc2020-api.testkontur.ru");
-}
-
-Transceiver::Transceiver(const std::string &serverPath, const std::string &playerKey)
-    : _serverPath(serverPath), _playerKey(playerKey)
-{
+    _serverPath = "/aliens/send";
     const std::regex urlRegexp("http://(.+):(\\d+)");
     std::smatch urlMatches;
-    if (!std::regex_search(serverPath, urlMatches, urlRegexp) || urlMatches.size() != 3)
+    if (!std::regex_search(serverUrl, urlMatches, urlRegexp) || urlMatches.size() != 3)
     {
         throw std::runtime_error("Unexpected server response:\nBad server URL");
     }
@@ -19,7 +16,7 @@ Transceiver::Transceiver(const std::string &serverPath, const std::string &playe
     const int serverPort = std::stoi(urlMatches[2]);
 
     _client = std::make_unique<httplib::Client>(serverName, serverPort);
-    auto serverResponse = _client->Post(serverPath.c_str(), playerKey.c_str(), "text/plain");
+    auto serverResponse = _client->Post(_serverPath.c_str(), playerKey.c_str(), "text/plain");
     _errorCheck(serverResponse);
 }
 
