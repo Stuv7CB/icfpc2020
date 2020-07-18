@@ -27,4 +27,6 @@ List demodulateList(std::string_view &signal);
 std::string modulate(int64_t value);
 std::string modulateList(const List &list);
 
+void printResponse(const Modulation::List& resp);
+
 };

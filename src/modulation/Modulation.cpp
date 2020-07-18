@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <cstdint>
 #include <cmath>
+#include <iostream>
 
 int64_t Modulation::demodulate(std::string_view &signal)
 {
@@ -60,21 +61,28 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
 {
     Modulation::List list;
 
-    while (!signal.empty() && signal.substr(0, 2) == "11")
+    if (signal.substr(0,2) != "11")
     {
-        signal = signal.substr(2);
+        throw std::exception("Not a list");
+    }
+
+    signal = signal.substr(2);
+
+    while (!signal.empty())
+    {
         if (signal.substr(0, 2) == "11")
         {
             list.value.emplace_back(demodulateList(signal));
             continue;
         }
-        list.value.push_back(demodulate(signal));
 
         if (signal.substr(0, 2) == "00")
         {
             signal = signal.substr(2);
             break;
         }
+
+        list.value.push_back(demodulate(signal));
     }
     return list;
 }
@@ -141,4 +149,39 @@ std::string Modulation::modulateList(const List &list)
     }
     result += "00";
     return result;
+}
+
+void printResponseArray(const Modulation::List& resp)
+{
+    std::cout << '(';
+    for (auto &el : resp.value)
+    {
+        std::visit([](auto&& arg)
+        {
+            using T = std::decay_t<decltype(arg)>;
+            if constexpr (std::is_same_v<T, int64_t>)
+            {
+                std::cout << arg;
+            }
+            else if constexpr (std::is_same_v<T, Modulation::List>)
+            {
+                printResponse(arg);
+            }
+            else
+            {
+                static_assert(always_false_v<T>, "non-exhaustive visitor!");
+            }
+        }, el);
+        if (&el != &resp.value.back())
+        {
+            std::cout << ", ";
+        }
+    }
+    std::cout << ')';
+}
+
+void Modulation::printResponse(const Modulation::List& resp)
+{
+    printResponseArray(resp);
+    std::cout << std::endl;
 }

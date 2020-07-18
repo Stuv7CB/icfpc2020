@@ -7,35 +7,6 @@
 #include "Transceiver.hpp"
 #include "helper.hpp"
 
-void printResponse(const Modulation::List& resp)
-{
-    std::cout << '(';
-    for (auto &el : resp.value)
-    {
-        std::visit([](auto&& arg)
-        {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, int64_t>)
-            {
-                std::cout << arg;
-            }
-            else if constexpr (std::is_same_v<T, Modulation::List>)
-            {
-                printResponse(arg);
-            }
-            else
-            {
-                static_assert(always_false_v<T>, "non-exhaustive visitor!");
-            }
-        }, el);
-        if (&el != &resp.value.back())
-        {
-            std::cout << ", ";
-        }
-    }
-    std::cout << ')';
-}
-
 int main(int argc, char* argv[])
 {
     if (argc != 3)

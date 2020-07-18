@@ -1,3 +1,5 @@
-add_executable(tests main.cpp)
+file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
 
-target_link_libraries(tests httplib gtest gmock_main)
+add_executable(tests ${SOURCES})
+
+target_link_libraries(tests modulation gtest gmock_main)
