@@ -54,8 +54,10 @@ int main(int argc, char* argv[])
                     Modulation::List(
                         std::vector<std::variant<int64_t, Modulation::List>>
                         {
-                            std::variant<int64_t, Modulation::List>(4),
-                            std::variant<int64_t, Modulation::List>(Modulation::List()),
+                            std::variant<int64_t, Modulation::List>(0),
+                            std::variant<int64_t, Modulation::List>(0),
+                            std::variant<int64_t, Modulation::List>(0),
+                            std::variant<int64_t, Modulation::List>(0),
                         }))
     };
 
