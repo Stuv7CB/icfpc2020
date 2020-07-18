@@ -11,7 +11,7 @@ public:
 
 private:
     std::unique_ptr<httplib::Client> _client;
-    std::string _serverPath;
+    std::string _serverPath = "/aliens/send";
     std::string _playerKey;
 
     void _errorCheck(std::shared_ptr<httplib::Response> &serverResponse);
