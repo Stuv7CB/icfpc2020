@@ -61,15 +61,19 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
 {
     Modulation::List list;
 
-    if (signal.substr(0,2) != "11")
+    if (signal.substr(0,2) == "00")
+    {
+        signal = signal.substr(2);
+        return list;
+    }
+    else if (signal.substr(0,2) != "11")
     {
         throw std::runtime_error("Not a list");
     }
 
-    signal = signal.substr(2);
-
-    while (!signal.empty())
+    while (!signal.empty() && signal.substr(0, 2) == "11")
     {
+        signal = signal.substr(2);
         if (signal.substr(0, 2) == "11")
         {
             list.value.emplace_back(demodulateList(signal));
@@ -79,10 +83,23 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
         if (signal.substr(0, 2) == "00")
         {
             signal = signal.substr(2);
+            list.value.emplace_back(List());
+        }
+        else
+        {
+            list.value.push_back(demodulate(signal));
+            auto ss = signal.substr(0, 2);
+            if (ss == "10" || ss == "01")
+            {
+                list.value.push_back(demodulate(signal));
+                break;
+            }
+        }
+        if (signal.substr(0, 2) == "00")
+        {
+            signal = signal.substr(2);
             break;
         }
-
-        list.value.push_back(demodulate(signal));
     }
     return list;
 }
@@ -127,9 +144,9 @@ std::string Modulation::modulate(int64_t value)
 std::string Modulation::modulateList(const List &list)
 {
     std::string result;
-    result += "11";
     for (auto &el : list.value)
     {
+        result += "11";
         result += std::visit([](auto&& arg) -> std::string
         {
             using T = std::decay_t<decltype(arg)>;

@@ -55,10 +55,10 @@ int main(int argc, char* argv[])
                     Modulation::List(
                         std::vector<std::variant<int64_t, Modulation::List>>
                         {
-                            std::variant<int64_t, Modulation::List>(0),
-                            std::variant<int64_t, Modulation::List>(0),
-                            std::variant<int64_t, Modulation::List>(0),
-                            std::variant<int64_t, Modulation::List>(0),
+                            std::variant<int64_t, Modulation::List>(1),
+                            std::variant<int64_t, Modulation::List>(2),
+                            std::variant<int64_t, Modulation::List>(3),
+                            std::variant<int64_t, Modulation::List>(4),
                         }))
     };
 
@@ -80,7 +80,27 @@ int main(int argc, char* argv[])
 
     while (gameState != 2)
     {
-        break;
+        Modulation::List comandRequest;
+        comandRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
+        {
+            std::variant<int64_t, Modulation::List>(4),
+            std::variant<int64_t, Modulation::List>(playerKey),
+            std::variant<int64_t, Modulation::List>(Modulation::List())
+        };
+        std::cout << "Comand Request" << std::endl;
+        printResponse(comandRequest);
+
+        auto comandRequestString = Modulation::modulateList(comandRequest);
+
+        auto comandResponseString = transeiver.send(comandRequestString);
+        auto comandResponseStringView = std::string_view(comandResponseString);
+
+        auto comandResponse = Modulation::demodulateList(comandResponseStringView);
+
+        std::cout << "Comand Response" << std::endl;
+        printResponse(comandResponse);
+
+        gameState = std::get<int64_t>(comandResponse.value[1]);
     }
 
     return 0;
