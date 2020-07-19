@@ -6,6 +6,8 @@
 #include "Modulation.hpp"
 #include "Transceiver.hpp"
 #include "helper.hpp"
+#include "StaticGameInfo.hpp"
+#include "GameResponse.hpp"
 
 int main(int argc, char* argv[])
 {
