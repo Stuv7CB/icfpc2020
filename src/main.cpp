@@ -103,11 +103,14 @@ int main(int argc, char* argv[])
             std::variant<int64_t, Modulation::List>(4),
             std::variant<int64_t, Modulation::List>(playerKey),
             std::variant<int64_t, Modulation::List>(
-                        Modulation::List({std::variant<int64_t, Modulation::List>(0),
-                                          std::variant<int64_t, Modulation::List>(ship->shipId),
-                                          Modulation::List({std::variant<int64_t, Modulation::List>(acceleration.x),
-                                                            std::variant<int64_t, Modulation::List>(acceleration.y)
-                                                            })
+                        Modulation::List({
+                            std::variant<int64_t, Modulation::List>(Modulation::List(
+                                             {std::variant<int64_t, Modulation::List>(1),
+                                              std::variant<int64_t, Modulation::List>(ship->shipId),
+                                              /*Modulation::List({std::variant<int64_t, Modulation::List>(acceleration.x),
+                                                                std::variant<int64_t, Modulation::List>(acceleration.y)
+                                                                })*/
+                                                            }))
                                                         })
                                                     )
         };
