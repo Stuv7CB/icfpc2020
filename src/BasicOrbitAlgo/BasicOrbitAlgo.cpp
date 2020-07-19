@@ -83,6 +83,8 @@ Vector BasicOrbitAlgo::calculateSpeed(Vector currentShipCoords,
         newSpeed.y = _gravity;
     }
     newSpeed.x = _gravity * 2 - rotatedVelocity.x;
+    newSpeed.x *= -1;
+    newSpeed.y *= -1;
     return rotate(rorationAngle * -1, newSpeed);
 }
 
