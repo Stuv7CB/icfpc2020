@@ -1,4 +1,5 @@
 #include "Commands.hpp"
+#include <iterator>
 
 std::ostream &operator<<(std::ostream &os, const AccCommand &accCommand)
 {

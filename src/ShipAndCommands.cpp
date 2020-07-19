@@ -1,4 +1,5 @@
 #include "ShipAndCommands.hpp"
+#include <iterator>
 
 std::ostream &operator<<(std::ostream &os, const ShipAndCommands &ship)
 {
