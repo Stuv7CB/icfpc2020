@@ -85,7 +85,13 @@ int main(int argc, char* argv[])
         {
             std::variant<int64_t, Modulation::List>(4),
             std::variant<int64_t, Modulation::List>(playerKey),
-            std::variant<int64_t, Modulation::List>(Modulation::List())
+            std::variant<int64_t, Modulation::List>(
+                        Modulation::List(
+                            std::vector<std::variant<int64_t, Modulation::List>>
+                            {
+                                std::variant<int64_t, Modulation::List>(1),
+                                std::variant<int64_t, Modulation::List>(2),
+                            }))
         };
         std::cout << "Comand Request" << std::endl;
         printResponse(comandRequest);
