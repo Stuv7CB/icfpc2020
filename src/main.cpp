@@ -9,6 +9,7 @@
 #include "StaticGameInfo.hpp"
 #include "GameResponse.hpp"
 #include "Converter.hpp"
+#include "BasicOrbitAlgo.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -79,16 +80,36 @@ int main(int argc, char* argv[])
     std::cout << "Start Response" << std::endl;
     printResponse(startResponse);
 
-    auto gameState = std::get<int64_t>(startResponse.value[1]);
+    auto response = fromList<GameResponse>(startResponse);
+    auto gameState = response.gameStage;
 
-    while (gameState != 2)
+    const auto role = response.staticGameInfo.role;
+    BasicOrbitAlgo orbitAlgo;
+    while (gameState != GameStage::Finished)
     {
+        Ship *ship = nullptr;
+        for (auto &shipcom : response.gameState.value().shipsAndCommands)
+        {
+            if (shipcom.ship.role == role)
+            {
+                ship = &shipcom.ship;
+            }
+        }
+        auto acceleration = orbitAlgo.calculateSpeed(ship->position, ship->velocity);
+
         Modulation::List comandRequest;
         comandRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
         {
             std::variant<int64_t, Modulation::List>(4),
             std::variant<int64_t, Modulation::List>(playerKey),
-            std::variant<int64_t, Modulation::List>(Modulation::List())
+            std::variant<int64_t, Modulation::List>(
+                        Modulation::List({std::variant<int64_t, Modulation::List>(0),
+                                          std::variant<int64_t, Modulation::List>(ship->shipId),
+                                          Modulation::List({std::variant<int64_t, Modulation::List>(acceleration.x),
+                                                            std::variant<int64_t, Modulation::List>(acceleration.y)
+                                                            })
+                                                        })
+                                                    )
         };
         std::cout << "Comand Request" << std::endl;
         printResponse(comandRequest);
@@ -103,11 +124,11 @@ int main(int argc, char* argv[])
         std::cout << "Comand Response" << std::endl;
         printResponse(comandResponse);
 
-        auto response = fromList<GameResponse>(comandResponse);
+        response = fromList<GameResponse>(comandResponse);
 
         std::cout << response << std::endl;
 
-        gameState = std::get<int64_t>(comandResponse.value[1]);
+        gameState = response.gameStage;
     }
 
     return 0;

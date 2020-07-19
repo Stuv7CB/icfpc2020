@@ -21,7 +21,7 @@ std::ostream& operator<<(std::ostream& os, const GameStage gameStage);
 
 struct GameResponse
 {
-    const int64_t result = 1;
+    int64_t result = 1;
     GameStage gameStage;
     StaticGameInfo staticGameInfo;
     std::optional<GameState> gameState;

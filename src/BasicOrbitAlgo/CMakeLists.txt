@@ -4,4 +4,4 @@ add_library(BasicOrbitAlgo OBJECT ${SOURCES})
 
 target_include_directories(BasicOrbitAlgo PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(BasicOrbitAlgo helper)
+target_link_libraries(BasicOrbitAlgo Vector)
