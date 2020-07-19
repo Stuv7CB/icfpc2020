@@ -5,6 +5,7 @@
 #include "Modulation.hpp"
 #include "ShipAndCommands.hpp"
 #include <any>
+#include <optional>
 
 struct GameState
 {
@@ -14,3 +15,5 @@ struct GameState
 };
 
 std::ostream& operator<<(std::ostream& os, const GameState& gameState);
+
+std::ostream& operator<<(std::ostream& os, const std::optional<GameState>& gameState);
