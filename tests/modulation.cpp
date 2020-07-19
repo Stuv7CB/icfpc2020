@@ -77,3 +77,22 @@ TEST(Modulation, Modulate)
     auto demodulated = Modulation::demodulateList(mView);
     Modulation::printResponse(demodulated);
 }
+
+TEST(Modulation, Modulate1)
+{
+    Modulation::List startRequest;
+    startRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
+    {
+        std::variant<int64_t, Modulation::List>(1),
+        std::variant<int64_t, Modulation::List>(2),
+        std::variant<int64_t, Modulation::List>(Modulation::List()),
+        std::variant<int64_t, Modulation::List>(Modulation::List())
+    };
+
+    auto modulated = Modulation::modulateList(startRequest);
+    std::string_view mView = modulated;
+    ASSERT_EQ("110110000111011000101100110000", mView);
+    std::cout << mView << std::endl;
+    auto demodulated = Modulation::demodulateList(mView);
+    Modulation::printResponse(demodulated);
+}
