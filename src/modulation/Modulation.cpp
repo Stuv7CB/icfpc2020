@@ -77,22 +77,23 @@ Modulation::List Modulation::demodulateList(std::string_view &signal)
         if (signal.substr(0, 2) == "11")
         {
             list.value.emplace_back(demodulateList(signal));
-            continue;
-        }
-
-        if (signal.substr(0, 2) == "00")
-        {
-            signal = signal.substr(2);
-            list.value.emplace_back(List());
         }
         else
         {
-            list.value.push_back(demodulate(signal));
-            auto ss = signal.substr(0, 2);
-            if (ss == "10" || ss == "01")
+            if (signal.substr(0, 2) == "00")
+            {
+                signal = signal.substr(2);
+                list.value.emplace_back(List());
+            }
+            else
             {
                 list.value.push_back(demodulate(signal));
-                break;
+                auto ss = signal.substr(0, 2);
+                if (ss == "10" || ss == "01")
+                {
+                    list.value.push_back(demodulate(signal));
+                    break;
+                }
             }
         }
         if (signal.substr(0, 2) == "00")
