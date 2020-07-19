@@ -1,4 +1,5 @@
 #include "StaticGameInfo.hpp"
+#include "Vector.hpp"
 
 std::ostream &operator<<(std::ostream &os, const Role role)
 {

@@ -16,7 +16,7 @@ static T fromList(const Modulation::List &list)
         GameState gameState;
 
         gameState.gameTick = std::get<int64_t>(list.value[0]);
-        gameState.x1 = std::get<int64_t>(list.value[1]);
+        gameState.x1 = list.value[1];
         gameState.shipsAndCommands = fromList<std::vector<ShipAndCommands>>(std::get<Modulation::List>(list.value[2]));
 
         return gameState;
@@ -35,11 +35,11 @@ static T fromList(const Modulation::List &list)
     else if constexpr (std::is_same_v<T, StaticGameInfo>)
     {
         StaticGameInfo staticGameInfo;
-        staticGameInfo.x0 = std::get<int64_t>(list.value[0]);
-        staticGameInfo.role = static_cast<Role>(std::get<int64_t>(list.value[0]));
-        staticGameInfo.x2 = std::get<int64_t>(list.value[2]);
-        staticGameInfo.x3 = std::get<int64_t>(list.value[3]);
-        staticGameInfo.x4 = std::get<int64_t>(list.value[4]);
+        staticGameInfo.x0 = list.value[0];
+        staticGameInfo.role = static_cast<Role>(std::get<int64_t>(list.value[1]));
+        staticGameInfo.x2 = list.value[2];
+        staticGameInfo.x3 = list.value[3];
+        staticGameInfo.x4 = list.value[4];
         return staticGameInfo;
     }
     else if constexpr (std::is_same_v<T, GameResponse>)
@@ -50,7 +50,10 @@ static T fromList(const Modulation::List &list)
 
         gameResponse.staticGameInfo = fromList<StaticGameInfo>(std::get<Modulation::List>(list.value[2]));
 
-        gameResponse.gameState = fromList<GameState>(std::get<Modulation::List>(list.value[3]));
+        if (list.value.size() == 4)
+        {
+            gameResponse.gameState = fromList<GameState>(std::get<Modulation::List>(list.value[3]));
+        }
 
         return gameResponse;
     }
@@ -74,7 +77,7 @@ static T fromList(const Modulation::List &list)
         ShootCommand shootCommand;
         shootCommand.shipId = std::get<int64_t>(list.value[1]);
         shootCommand.vector = fromList<Vector>(std::get<Modulation::List>(list.value[2]));
-        shootCommand.x3 = std::get<int64_t>(list.value[3]);
+        shootCommand.x3 = list.value[3];
 
         return shootCommand;
     }
@@ -86,10 +89,10 @@ static T fromList(const Modulation::List &list)
         ship.shipId = std::get<int64_t>(list.value[1]);
         ship.position = fromList<Vector>(std::get<Modulation::List>(list.value[2]));
         ship.velocity = fromList<Vector>(std::get<Modulation::List>(list.value[3]));
-        ship.x4 = std::get<int64_t>(list.value[4]);
-        ship.x5 = std::get<int64_t>(list.value[5]);
-        ship.x6 = std::get<int64_t>(list.value[6]);
-        ship.x7 = std::get<int64_t>(list.value[7]);
+        ship.x4 = list.value[4];
+        ship.x5 = list.value[5];
+        ship.x6 = list.value[6];
+        ship.x7 = list.value[7];
 
         return ship;
     }

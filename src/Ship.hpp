@@ -4,6 +4,7 @@
 #include <vector>
 #include "Vector.hpp"
 #include "StaticGameInfo.hpp"
+#include <any>
 
 struct Ship
 {
@@ -11,10 +12,10 @@ struct Ship
     int64_t shipId;
     Vector position;
     Vector velocity;
-    int64_t x4;
-    int64_t x5;
-    int64_t x6;
-    int64_t x7;
+    std::any x4;
+    std::any x5;
+    std::any x6;
+    std::any x7;
 };
 
 std::ostream& operator<<(std::ostream& os, const Ship& ship);

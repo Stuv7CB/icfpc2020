@@ -1,6 +1,7 @@
 #pragma once
 #include <ostream>
 #include <string>
+#include <optional>
 #include "StaticGameInfo.hpp"
 #include "GameState.hpp"
 #include "Modulation.hpp"
@@ -23,7 +24,7 @@ struct GameResponse
     const int64_t result = 1;
     GameStage gameStage;
     StaticGameInfo staticGameInfo;
-    GameState gameState;
+    std::optional<GameState> gameState;
 };
 
 std::ostream& operator<<(std::ostream& os, const GameResponse &gameResponse);

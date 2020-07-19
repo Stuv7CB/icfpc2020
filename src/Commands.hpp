@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <variant>
 #include <vector>
+#include <any>
 
 #include "Vector.hpp"
 
@@ -28,7 +29,7 @@ struct ShootCommand
     const int64_t commandId = 2;
     int64_t shipId;
     Vector vector;
-    int64_t x3; // Unknown
+    std::any x3; // Unknown
 };
 
 std::ostream& operator<<(std::ostream& os, const ShootCommand &shootCommand);

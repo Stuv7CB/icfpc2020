@@ -4,11 +4,12 @@
 #include <ostream>
 #include "Modulation.hpp"
 #include "ShipAndCommands.hpp"
+#include <any>
 
 struct GameState
 {
     int64_t gameTick;
-    int64_t x1; // Unknown
+    std::any x1; // Unknown
     std::vector<ShipAndCommands> shipsAndCommands;
 };
 

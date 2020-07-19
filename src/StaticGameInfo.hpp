@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <ostream>
+#include <any>
 #include "Modulation.hpp"
 
 enum class Role : int64_t
@@ -13,11 +14,11 @@ std::ostream& operator<<(std::ostream& os, const Role role);
 
 struct StaticGameInfo
 {
-    int64_t x0; // Unknown
+    std::any x0; // Unknown
     Role role;
-    int64_t x2; // Unknown
-    int64_t x3; // Unknown
-    int64_t x4; // Unknown
+    std::any x2; // Unknown
+    std::any x3; // Unknown
+    std::any x4; // Unknown
 };
 
 std::ostream& operator<<(std::ostream& os, const StaticGameInfo& staticGameInfo);
