@@ -6,6 +6,9 @@
 #include "Modulation.hpp"
 #include "Transceiver.hpp"
 #include "helper.hpp"
+#include "StaticGameInfo.hpp"
+#include "GameResponse.hpp"
+#include "Converter.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -99,6 +102,10 @@ int main(int argc, char* argv[])
 
         std::cout << "Comand Response" << std::endl;
         printResponse(comandResponse);
+
+        auto response = fromList<GameResponse>(comandResponse);
+
+        std::cout << response << std::endl;
 
         gameState = std::get<int64_t>(comandResponse.value[1]);
     }
