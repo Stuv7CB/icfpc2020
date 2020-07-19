@@ -1,5 +1,6 @@
 #pragma once
 #include <ostream>
+#include "Modulation.hpp"
 
 struct GameState
 {
@@ -7,8 +8,4 @@ struct GameState
     int64_t x1; // Unknown
 };
 
-std::ostream& operator<<(std::ostream& os, const GameState& gameState) {
-    return os << "{ GameState| "
-              << "gameTick: " << gameState.gameTick << "; "
-              << "x1: " << gameState.x1 << "}";
-}
+std::ostream& operator<<(std::ostream& os, const GameState& gameState);
