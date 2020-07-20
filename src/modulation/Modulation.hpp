@@ -4,22 +4,24 @@
 #include <vector>
 #include <variant>
 
+
+
 namespace Modulation
 {
+struct List;
+using Node = std::variant<int64_t, List>;
+using NodeList = std::vector<Node>;
 
 struct List
 {
     List()
     {
-
     }
 
-    List(std::vector<std::variant<int64_t, List>> &&v) : value(std::move(v))
+    List(NodeList &&v) : value(std::move(v))
     {
-
     }
-
-    std::vector<std::variant<int64_t, List>> value;
+    NodeList value;
 };
 
 int64_t demodulate(std::string_view &signal);

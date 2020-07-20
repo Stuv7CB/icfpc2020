@@ -31,13 +31,12 @@ int main(int argc, char* argv[])
 
     Transceiver transeiver(serverUrl);
 
-    Modulation::List joinRequest;
-    joinRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
+    Modulation::List joinRequest(
     {
-        std::variant<int64_t, Modulation::List>(2),
-        std::variant<int64_t, Modulation::List>(playerKey),
-        std::variant<int64_t, Modulation::List>(Modulation::List()),
-    };
+        Modulation::Node(2),
+        Modulation::Node(playerKey),
+        Modulation::Node(Modulation::List()),
+    });
 
     std::cout << "Join Request" << std::endl;
     printResponse(joinRequest);
@@ -50,21 +49,18 @@ int main(int argc, char* argv[])
     std::cout << "Join Response" << std::endl;
     printResponse(joinResponse);
 
-    Modulation::List startRequest;
-    startRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
+    Modulation::List startRequest(
     {
-        std::variant<int64_t, Modulation::List>(3),
-        std::variant<int64_t, Modulation::List>(playerKey),
-        std::variant<int64_t, Modulation::List>(
-                    Modulation::List(
-                        std::vector<std::variant<int64_t, Modulation::List>>
+        Modulation::Node(3),
+        Modulation::Node(playerKey),
+        Modulation::Node(Modulation::List(
                         {
-                            std::variant<int64_t, Modulation::List>(1),
-                            std::variant<int64_t, Modulation::List>(2),
-                            std::variant<int64_t, Modulation::List>(3),
-                            std::variant<int64_t, Modulation::List>(4),
+                            Modulation::Node(1),
+                            Modulation::Node(2),
+                            Modulation::Node(3),
+                            Modulation::Node(4),
                         }))
-    };
+    });
 
     std::cout << "Start Request" << std::endl;
     printResponse(startRequest);
@@ -97,23 +93,24 @@ int main(int argc, char* argv[])
         }
         auto acceleration = orbitAlgo.calculateSpeed(ship->position, ship->velocity);
 
-        Modulation::List comandRequest;
-        comandRequest.value = std::vector<std::variant<int64_t, Modulation::List>>
+        Modulation::List comandRequest(
         {
-            std::variant<int64_t, Modulation::List>(4),
-            std::variant<int64_t, Modulation::List>(playerKey),
-            std::variant<int64_t, Modulation::List>(
-                        Modulation::List({
-                            std::variant<int64_t, Modulation::List>(Modulation::List(
-                                             {std::variant<int64_t, Modulation::List>(1),
-                                              std::variant<int64_t, Modulation::List>(ship->shipId),
-                                              /*Modulation::List({std::variant<int64_t, Modulation::List>(acceleration.x),
-                                                                std::variant<int64_t, Modulation::List>(acceleration.y)
-                                                                })*/
-                                                            }))
-                                                        })
-                                                    )
-        };
+            Modulation::Node(4),
+            Modulation::Node(playerKey),
+            Modulation::Node(Modulation::List(
+                        {
+                            Modulation::Node(Modulation::List(
+                            {
+                                Modulation::Node(0),
+                                Modulation::Node(ship->shipId),
+                                Modulation::Node(Modulation::List(
+                                {
+                                    Modulation::Node(acceleration.x),
+                                    Modulation::Node(acceleration.y)
+                                }))
+                            }))
+                         }))
+        });
         std::cout << "Comand Request" << std::endl;
         printResponse(comandRequest);
 
