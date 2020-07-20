@@ -101,13 +101,14 @@ int main(int argc, char* argv[])
                         {
                             Modulation::Node(Modulation::List(
                             {
-                                Modulation::Node(0),
+                                Modulation::Node(2),
                                 Modulation::Node(ship->shipId),
                                 Modulation::Node(Modulation::List(
                                 {
-                                    Modulation::Node(acceleration.x),
-                                    Modulation::Node(acceleration.y)
-                                }))
+                                    Modulation::Node(10),
+                                    Modulation::Node(10)
+                                })),
+                                Modulation::Node(2)
                             }))
                          }))
         });
