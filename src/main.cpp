@@ -55,10 +55,10 @@ int main(int argc, char* argv[])
         Modulation::Node(playerKey),
         Modulation::Node(Modulation::List(
                         {
-                            Modulation::Node(1),
+                            Modulation::Node(128),
+                            Modulation::Node(15),
+                            Modulation::Node(14),
                             Modulation::Node(2),
-                            Modulation::Node(3),
-                            Modulation::Node(4),
                         }))
     });
 

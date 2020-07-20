@@ -65,11 +65,11 @@ Vector BasicOrbitAlgo::calculateSpeed(Vector currentShipCoords,
 
     if (rotatedCoords.y < _maintainingOrbit)
     {
-        newSpeed.y  = _gravity * 2;
+        newSpeed.y  = _gravity;
     }
     else if (rotatedCoords.y > _maintainingOrbit)
     {
-        if (rotatedVelocity.y > 2)
+        if (rotatedVelocity.y > 1)
         {
             newSpeed.y = _gravity;
         }
@@ -82,7 +82,8 @@ Vector BasicOrbitAlgo::calculateSpeed(Vector currentShipCoords,
     {
         newSpeed.y = _gravity;
     }
-    newSpeed.x = _gravity * 2 - rotatedVelocity.x;
+    newSpeed.x = rotatedVelocity.x < 1 ? 1 : 0;
+
     newSpeed.x *= -1;
     newSpeed.y *= -1;
     return rotate(rorationAngle * -1, newSpeed);
